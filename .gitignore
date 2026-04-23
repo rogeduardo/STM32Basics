@@ -6,6 +6,8 @@
 *.launch
 *.ld
 
-# Ignorar diretório Debug em qualquer nível
+# Ignorar esses diretórios
 Debug/
+.metadata/
+chip_headers/
 

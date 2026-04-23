@@ -1,0 +1,11 @@
+# Ignorar esses arquivos
+**/syscalls.c
+**/sysmem.c
+
+# Ignorar arquivos com extensões específicas
+*.launch
+*.ld
+
+# Ignorar diretório Debug em qualquer nível
+Debug/
+

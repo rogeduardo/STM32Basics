@@ -3,18 +3,15 @@
 
 #include "myuart.h"
 
-#define GPIOAEN	(1U<<0)
-#define LED_PIN	(1U<<5)
-
 volatile char key;
 
 int main (void)
 {
 	/*Enable GPIO Port A*/
-	RCC->AHB1ENR |=GPIOAEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	/*Set Port A pin 5 as output*/
-	GPIOA->MODER |=  (1U<<10);
-	GPIOA->MODER &= ~(1U<<11);
+	GPIOA->MODER |=  GPIO_MODER_MODE5_0;
+	GPIOA->MODER &= ~GPIO_MODER_MODE5_1;
 
 	uart2_rxtx_init();
 
@@ -22,9 +19,9 @@ int main (void)
 	{
 		key = uart2_read();
 		if (key == '1')
-			GPIOA->ODR |= LED_PIN;
+			GPIOA->ODR |= GPIO_ODR_OD5;
 		else
-			GPIOA->ODR &= ~LED_PIN;
+			GPIOA->ODR &= ~GPIO_ODR_OD5;
 	}
 }
 

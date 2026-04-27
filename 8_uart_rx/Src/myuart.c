@@ -3,26 +3,16 @@
 
 #include "myuart.h"
 
-#define GPIOAEN			(1U<<0)
-#define UART2EN			(1U<<17)
-
-#define CR1_TE			(1U<<3)
-#define CR1_RE			(1U<<2)
-
-#define CR1_UE			(1U<<13)
-
-#define SR_TXE			(1U<<7)
-#define SR_RXNE			(1U<<5)
-
 #define SYS_FREQ		16000000U
 #define APB1_CLK		SYS_FREQ
 
 #define UART_BAUDRATE	115200
 
 void uart2_write(int ch);
-static void uart_set_baudrate ();
+static void uart_set_baudrate();
 static uint32_t compute_uart_bd();
 
+//Character output used by printf via Syscalls hook
 int __io_putchar(int ch)
 {
 	uart2_write(ch);
@@ -33,40 +23,40 @@ void uart2_rxtx_init(void)
 {
 	//Configure uart2 GPIO pin
 	//Enable clock access to GPIOA
-	RCC->AHB1ENR |= GPIOAEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	//Set PA2 mode to alternate function mode
-	GPIOA->MODER &=~(1U<<4);
-	GPIOA->MODER |= (1U<<5);
+	GPIOA->MODER &= ~GPIO_MODER_MODE2_0;
+	GPIOA->MODER |=  GPIO_MODER_MODE2_1;
 	//Set PA2 alternate function type to UART_TX (AF07)
-	GPIOA->AFR[0] |= (1U<<8);
-	GPIOA->AFR[0] |= (1U<<9);
-	GPIOA->AFR[0] |= (1U<<10);
-	GPIOA->AFR[0] &=~(1U<<11);
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL2_0;
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL2_1;
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL2_2;
+	GPIOA->AFR[0] &=~GPIO_AFRL_AFRL2_3;
 
 	//Set PA3 mode to alternate function mode
-	GPIOA->MODER &= ~(1U << 6);
-	GPIOA->MODER |= (1U << 7);
+	GPIOA->MODER &= ~GPIO_MODER_MODE3_0;
+	GPIOA->MODER |=  GPIO_MODER_MODE3_1;
 	//Set PA3 alternate function type to UART_RX (AF07)
-	GPIOA->AFR[0] |= (1U<<12);
-	GPIOA->AFR[0] |= (1U<<13);
-	GPIOA->AFR[0] |= (1U<<14);
-	GPIOA->AFR[0] &=~(1U<<15);
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL3_0;
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL3_1;
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL3_2;
+	GPIOA->AFR[0] &=~GPIO_AFRL_AFRL3_3;
 
 	//Configure uart module
 	//Enable clock access to uart2
-	RCC->APB1ENR |= UART2EN;
+	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 	//Configure baudrate
 	uart_set_baudrate ();
 	//Configure the transfer direction
-	USART2->CR1 = (CR1_TE | CR1_RE);
+	USART2->CR1 = (USART_CR1_TE | USART_CR1_RE);
 	//Enable uart module
-	USART2->CR1 |= CR1_UE;
+	USART2->CR1 |= USART_CR1_UE;
 }
 
 char uart2_read(void)
 {
 	//Make sure the receive data register is not empty
-	while ( !(USART2->SR & SR_RXNE) ){}
+	while ( !(USART2->SR & USART_SR_RXNE) ){}
 
 	return USART2->DR;
 
@@ -75,9 +65,9 @@ char uart2_read(void)
 void uart2_write(int ch)
 {
 	//Make sure the transmit data register is empty
-	while ( !(USART2->SR & SR_TXE) ){}
+	while ( !(USART2->SR & USART_SR_TXE) ){}
 	//Write to transmit data register
-	USART2->DR = ch & 0xFF;
+	USART2->DR = (uint8_t) ch;
 }
 
 static void uart_set_baudrate ()

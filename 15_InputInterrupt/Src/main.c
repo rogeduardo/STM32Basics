@@ -1,6 +1,6 @@
 /*
  * Author: Rogerio Eduardo de Oliveira
- * Description: This program turn on/off de LED (User LD2 PA5) and sent by UART (UART2 PA2) the action
+ * Description: This program turn on/off de LED (User LD2 PA5) and sent by UART (UART2 DPA2) the action
  * based on pressing (turn on) or release the button (B1 User PC13).
  */
 

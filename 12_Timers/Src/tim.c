@@ -1,8 +1,5 @@
 #include "tim.h"
 
-#define TIM2EN	(1U<<0)
-#define CR1_CEN	(1U<<0)
-
 void tim2_1hz_init(void)
 {
 	//Enable clock access to TIM2
@@ -14,5 +11,5 @@ void tim2_1hz_init(void)
 	//Clear counter
 	TIM2->CNT = 0;
 	//Enable timer
-	TIM2->CR1 |= CR1_CEN;
+	TIM2->CR1 |= TIM_CR1_CEN;
 }

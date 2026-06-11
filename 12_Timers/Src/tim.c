@@ -6,7 +6,7 @@
 void tim2_1hz_init(void)
 {
 	//Enable clock access to TIM2
-	RCC->APB1ENR |= TIM2EN;
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 	//Set prescaler value
 	TIM2->PSC = 1600 - 1;
 	//Set auto-reload value

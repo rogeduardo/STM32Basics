@@ -1,6 +1,9 @@
 # Ignorar esses arquivos
 **/syscalls.c
 **/sysmem.c
+**/*.s
+**/.cproject
+**/.project
 
 # Ignorar arquivos com extensões específicas
 *.launch
@@ -10,4 +13,6 @@
 Debug/
 .metadata/
 chip_headers/
+**/.settings/
+**/Startup
 
